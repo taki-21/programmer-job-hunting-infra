@@ -7,6 +7,6 @@ services:
       - .env
     volumes:
       - .:/code
-    working_dir: /code
+    working_dir: /code/terraform
     entrypoint: ash
     tty: true
