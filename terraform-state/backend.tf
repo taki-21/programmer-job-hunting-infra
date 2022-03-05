@@ -1,9 +1,9 @@
 resource "aws_s3_bucket" "terraform-state" {
   bucket = var.s3_bucket_name
   # terraform destroyによって削除されないよう設定
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
+  lifecycle {
+    prevent_destroy = true
+  }
   # AES256でファイルを暗号化
   server_side_encryption_configuration {
     rule {
