@@ -1,0 +1,8 @@
+{
+    "containerOverrides": [
+        {
+            "name": "rails",
+            "command": ["bundle", "exec", "rails", "db:create"]
+        }
+    ]
+}
