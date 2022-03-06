@@ -17,3 +17,7 @@ module "elb" {
   acm_id            = module.acm.acm_id
   domain            = var.domain
 }
+
+module "ecr" {
+  source = "./ecr"
+}
