@@ -53,3 +53,8 @@ module "ecs_rails" {
   cluster_name       = module.ecs_cluster.cluster_name
   public_subnet_ids  = module.network.public_subnet_ids
 }
+
+module "subdomain_acm" {
+  source = "./subdomain_acm"
+  domain = var.domain
+}
