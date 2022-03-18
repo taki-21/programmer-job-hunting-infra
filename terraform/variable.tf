@@ -9,7 +9,7 @@ variable "aws_profile" {
 }
 variable "app_name" {
   type    = string
-  default = "programmer_job_hunting"
+  default = "programmer-job-hunting"
 }
 
 variable "domain" {}

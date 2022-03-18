@@ -3,9 +3,9 @@ resource "aws_acm_certificate" "this" {
 
   validation_method = "DNS"
 
-#   lifecycle {
-#     create_before_destroy = true
-#   }
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 resource "aws_route53_record" "this" {
   depends_on = [aws_acm_certificate.this]

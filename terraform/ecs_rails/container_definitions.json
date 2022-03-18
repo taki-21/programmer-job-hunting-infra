@@ -21,7 +21,7 @@
     },
     {
       "name": "rails",
-      "image":"${account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/programmer_job_hunting:latest",
+      "image":"${account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/programmer-job-hunting:latest",
       "essential": true,
       "memory": 128,
       "logConfiguration": {
@@ -34,6 +34,10 @@
       },
       "command": ["bundle","exec","puma","-C","config/puma.rb"],
       "environment": [
+        {
+          "name": "RAILS_ENV",
+          "value": "production"
+        },
         {
           "name": "RDS_HOST",
           "value": "${db_host}"
