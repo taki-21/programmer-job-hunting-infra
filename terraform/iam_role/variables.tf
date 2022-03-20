@@ -1,3 +1,5 @@
 variable "name" {}
-variable "policy_arn" {}
+
+variable "policy" {}
+
 variable "identifier" {}
