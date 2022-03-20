@@ -1,9 +1,11 @@
-resource "aws_security_group" "security_group" {
-  name = "${var.app_name}-alb"
+resource "aws_security_group" "this" {
   vpc_id = var.vpc_id
+
   dynamic "ingress" {
     for_each = var.ingress_ports
+
     iterator = port
+
     content {
       from_port   = port.value
       to_port     = port.value
@@ -11,46 +13,56 @@ resource "aws_security_group" "security_group" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   }
+
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   tags = {
     Name = "${var.app_name}-sg"
   }
 }
 
-resource "aws_lb" "alb" {
-  name               = "programmer-job-hunting-alb"
+resource "aws_lb" "this" {
+  name               = "${var.app_name}-alb"
   load_balancer_type = "application"
-  security_groups = [aws_security_group.security_group.id]
+
+  idle_timeout = 60
+
+  security_groups = [aws_security_group.this.id]
   subnets         = var.public_subnet_ids
 }
 
 resource "aws_lb_listener" "http" {
-  # HTTPでのアクセスを受け付ける
   port     = "80"
   protocol = "HTTP"
-  load_balancer_arn = aws_lb.alb.arn
-  # "ok" という固定レスポンスを設定する
+
+  load_balancer_arn = aws_lb.this.arn
+
   default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      status_code  = "200"
-      message_body = "ok"
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
     }
   }
 }
+
 resource "aws_lb_listener" "https" {
   port     = "443"
   protocol = "HTTPS"
-  load_balancer_arn = aws_lb.alb.arn
-  certificate_arn   = var.acm_id
+
+  load_balancer_arn = aws_lb.this.arn
+  certificate_arn   = var.sub_acm_id
+
   default_action {
     type = "fixed-response"
+
     fixed_response {
       content_type = "text/plain"
       status_code  = "200"
@@ -61,11 +73,12 @@ resource "aws_lb_listener" "https" {
 
 resource "aws_route53_record" "this" {
   type    = "A"
-  name    = var.domain
+  name    = "api.${var.domain}"
   zone_id = data.aws_route53_zone.this.id
+
   alias {
-    name                   = aws_lb.alb.dns_name
-    zone_id                = aws_lb.alb.zone_id
+    name                   = aws_lb.this.dns_name
+    zone_id                = aws_lb.this.zone_id
     evaluate_target_health = true
   }
 }

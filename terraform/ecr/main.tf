@@ -1,5 +1,5 @@
 locals {
-    name_app = "programmer_job_hunting"
+    name_app = "programmer-job-hunting"
     name_nginx = "nginx"
 }
 

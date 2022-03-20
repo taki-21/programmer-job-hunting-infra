@@ -1,6 +1,5 @@
 resource "aws_acm_certificate" "this" {
-  provider    = aws.virginia
-  domain_name = var.domain
+  domain_name = "api.${var.domain}"
 
   validation_method = "DNS"
 
@@ -27,7 +26,6 @@ resource "aws_route53_record" "this" {
 }
 
 resource "aws_acm_certificate_validation" "this" {
-  provider        = aws.virginia
   certificate_arn = aws_acm_certificate.this.arn
 
   validation_record_fqdns = [for record in aws_route53_record.this : record.fqdn]
